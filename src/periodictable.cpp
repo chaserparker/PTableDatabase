@@ -581,6 +581,28 @@ Vector<string> PeriodicTable::spellerElements(string word) {
     return elements;
 }
 
+// This was used once to parse through EnglishWords.txt and find all
+// words of size n that could be spelled with element abbreviations.
+//Set<string> perfectsGivenWords(int n) {
+//    Set<string> words = size("src/res/EnglishWords.txt", n);
+//    string symbolSpell;
+//    Set<string> perfects;
+//    PeriodicTable ptable;
+//    for (string word : words) {
+//        symbolSpell = ptable.speller(word);
+//        if (toLowerCase(word) == toLowerCase(symbolSpell)) {
+//            cout << word << endl;
+//            perfects.add(word);
+//        }
+//    }
+//    return perfects;
+//}
+
+// This function parses perfectwords.txt and returns a set containing all the words
+// of size n that can be spelled with the periodic table. I ran the above function, perfectsGivenWords(),
+// 14 times (passing in n=1 --> n=14) and copy-pasted the results into perfectwords.txt.
+// This was so when I did data analysis with the results, I had quicker access to everything and didn't
+// have to re-run my slow code.
 Set<string> PeriodicTable::allPerfectWords(string filename, int size) {
     if (size < 1) {
         return {};
@@ -605,7 +627,8 @@ Set<string> PeriodicTable::allPerfectWords(string filename, int size) {
     return perfects;
 }
 
-
+// Used a single time to parse through perfectwords.txt and determine
+// how many n-letter words could be spelled with element abbreviations.
 //Set<string> size(string filename, int n) {
 //    int count = 0;
 //    Vector<string> lines;
@@ -622,22 +645,9 @@ Set<string> PeriodicTable::allPerfectWords(string filename, int size) {
 //    return words;
 //}
 
-//Set<string> perfectsGivenWords(int n) {
-//    Set<string> words = size("src/res/EnglishWords.txt", n);
-//    string symbolSpell;
-//    Set<string> perfects;
-//    PeriodicTable ptable;
-//    for (string word : words) {
-//        symbolSpell = ptable.speller(word);
-//        if (toLowerCase(word) == toLowerCase(symbolSpell)) {
-//            cout << word << endl;
-//            perfects.add(word);
-//        }
-//    }
-//    return perfects;
-//}
 
-
+// For the client: displays how many (and what percentage) of n-letter words
+// can be spelled using element abbreviations
 string printPerfects(int n) {
     if (n < 1) {
         return "{}";
@@ -658,47 +668,8 @@ string printPerfects(int n) {
     return returnString;
 }
 
-//Map<string, int> freqOfElemements() {
-//    Map<string, int> count;
-//    Map<string, string> symbols = symbolsMap("src/res/mass_name_symbol_num");
-//    for (string elem : symbols.keys()) {
-//        count.keys().add(elem);
-//        count[elem] = 0;
-//    }
-//    Vector<string> lines;
-//    PeriodicTable ptable;
-
-//    ifstream in;
-//    openFile(in, "src/res/perfectwords");
-//    readEntireFile(in, lines);
-//    for (int i = 14; i < lines.size(); i++) {
-//        lines[i].erase(0, 1);
-//        lines[i].erase(lines[i].size() - 1);
-//        Vector<string> words = stringSplit(lines[i], ' ');
-//        for (string word : words) {
-//            word = ptable.speller(word);
-//            cout << word << endl;
-//            for (size_t j = 0; j < word.size(); j++) {
-//                string next = charToString(word[j]);
-//                next += word[j + 1];
-//                if (isupper(word[j])) {
-//                    if (isupper(word[j + 1])) {
-//                        count[charToString(tolower(word[j]))]++;
-//                    }
-//                    if (islower(word[j + 1])) {
-//                        count[toLowerCase(next)]++;
-//                    }
-//                    if (j == word.size() - 1) {
-//                        count[charToString(tolower(word[j]))]++;
-//                    }
-
-//                }
-//            }
-//        }
-//    }
-//    return count;
-//}
-
+// Goes through all of allperfects.txt and generates a map containing the
+// frequency of each element abbreviation.
 Map<string, int> freqOfElemements() {
     Map<string, int> count;
     Map<string, string> symbols = symbolsMap("src/res/mass_name_symbol_num");
@@ -737,6 +708,9 @@ Map<string, int> freqOfElemements() {
     return count;
 }
 
+
+// for the client: displays the frequency of each element abbreviation
+// from allperfects.txt
 void printFreqs() {
     Map<std::string, float> perfectsFreq = {{"ac",998}, {"ag",443}, {"al",2387}, {"am",777}, {"ar",2217}, {"as",1408}, {"at",2009}, {"au",298},
                                           {"b",3440}, {"ba",260}, {"be",400}, {"bh",6}, {"bi",529}, {"bk",1}, {"br",279}, {"c",6633}, {"ca",568},
@@ -780,11 +754,60 @@ void printFreqs() {
         elementsSorted[i][0] = toupper(elementsSorted[i][0]);
         float percent = valsSorted[i] / total * 100;
         valsPercent.add(percent);
-        cout << elementsSorted[i] << ": " << valsPercent[i] << "%, ";
+//        cout << elementsSorted[i] << ": " << valsPercent[i] << "%, ";
+//        cout << endl;
+        cout << elementsSorted[i] << ": " << valsSorted[i] << ", ";
     }
 //    cout << elementsSorted << endl;
 //    cout << valsPercent << endl;
 }
+
+// Returns all the words containing the element's abbreviation from allperfects.txt
+void wordsContainingElem(string elem) {
+    elem[0] = toupper(elem[0]);
+    if (elem.size() == 2) {
+        elem[1] = tolower(elem[1]);
+    }
+    Map<std::string, float> perfectsFreq = {{"ac",998}, {"ag",443}, {"al",2387}, {"am",777}, {"ar",2217}, {"as",1408}, {"at",2009}, {"au",298},
+                                          {"b",3440}, {"ba",260}, {"be",400}, {"bh",6}, {"bi",529}, {"bk",1}, {"br",279}, {"c",6633}, {"ca",568},
+                                          {"cd",4}, {"ce",666}, {"cf",0}, {"cl",246}, {"cm",0}, {"cn",0}, {"co",1615}, {"cr",383}, {"cs",204},
+                                          {"cu",592}, {"db",37}, {"ds",726}, {"dy",147}, {"er",5924}, {"es",6323}, {"eu",140}, {"f",2957}, {"fe",245},
+                                          {"fl",229}, {"fm",0}, {"fr",129}, {"ga",420}, {"gd",8}, {"ge",791}, {"h",3708}, {"he",652}, {"hf",5},
+                                          {"hg",12}, {"ho",960}, {"hs",110}, {"i",9052}, {"in",1591}, {"ir",328}, {"k",2467}, {"kr",24}, {"la",1954},
+                                          {"li",1936}, {"lr",5}, {"lu",556}, {"lv",88}, {"mc",13}, {"md",1}, {"mg",0}, {"mn",83}, {"mo",860}, {"mt",8},
+                                          {"n",7931}, {"na",356}, {"nb",42}, {"nd",948}, {"ne",1037}, {"nh",32}, {"ni",1164}, {"no",910}, {"np",31},
+                                          {"o",8751}, {"og",361}, {"os",701}, {"p",5727}, {"pa",342}, {"pb",18}, {"pd",13}, {"pm",5}, {"po",637},
+                                          {"pr",675}, {"pt",132}, {"pu",342}, {"ra",1850}, {"rb",98}, {"re",2990}, {"rf",70}, {"rg",148}, {"rh",58},
+                                          {"rn",360}, {"ru",477}, {"s",9016}, {"sb",22}, {"sc",120}, {"se",1058}, {"sg",4}, {"si",905}, {"sm",573},
+                                          {"sn",25}, {"sr",2}, {"ta",1451}, {"tb",77}, {"tc",238}, {"te",2222}, {"th",805}, {"ti",3213}, {"tl",306},
+                                          {"tm",25}, {"ts",1396}, {"u",4658}, {"v",2277}, {"w",1771}, {"xe",138}, {"y",1528}, {"yb",26}, {"zn",1}, {"zr",0}};
+
+    int freq = perfectsFreq[toLowerCase(elem)];
+    if (freq > 150) {
+        cout << "Element appears over 150 times" << endl;
+        cout << endl;
+    }
+    else if (freq == 0) {
+        cout << "Element doesn't appear in search" << endl;
+        cout << endl;
+    }
+    else {
+        Vector<string> lines;
+        ifstream in;
+        Set<string> words;
+        openFile(in, "src/res/allperfects.txt");
+        readEntireFile(in, lines);
+        for (int i = 0; i < lines.size(); i++) {
+            lines[i].erase(lines[i].size() - 1);
+            if (lines[i].find(elem) != std::string::npos) {
+                words.add(lines[i]);
+            }
+        }
+        cout << words << endl;
+        cout << endl;
+    }
+}
+
 
 //////////////////////////////////////
 /////// CLIENT IS RIGHT HERE   ///////
@@ -807,7 +830,7 @@ void PeriodicTable::client() {
     cout << "ALKALIS (3a), ALKALINES (3b), METALS (3c), METALLOIDS (3d), HALOGENS (3e), NOBLE-GASES (3f), LANTHANIDES (3g), ACTINIDES (3h), RADIOACTIVES (3i)" << endl;
     cout << endl;
     cout << "Miscellaneous commands:" << endl;
-    cout << "CHEMSPELL (4a), SPELLMATCH (4.1a)" << endl;
+    cout << "CHEMSPELL (4a), SPELLMATCH (4b)" << endl;
     cout << endl;
 
     while (toLowerCase(decision) != "quit") {
@@ -826,7 +849,7 @@ void PeriodicTable::client() {
         cout << "ALKALIS (3a), ALKALINES (3b), METALS (3c), METALLOIDS (3d), HALOGENS (3e), NOBLE-GASES (3f), LANTHANIDES (3g), ACTINIDES (3h), RADIOACTIVES (3i)" << endl;
         cout << endl;
         cout << "Miscellaneous commands:" << endl;
-        cout << "CHEMSPELL (4a)" << endl;
+        cout << "CHEMSPELL (4a), SPELLMATCH (4b)" << endl;
     }
 
     if (toLowerCase(decision) == "all" || toLowerCase(decision) == "1a") {
@@ -990,7 +1013,7 @@ void PeriodicTable::client() {
         }
     }
 
-    else if (toLowerCase(decision) == "spellmatch" || toLowerCase(decision) == "4.1a") {
+    else if (toLowerCase(decision) == "spellmatch" || toLowerCase(decision) == "4b") {
         cout << endl;
         cout << "Welcome to Spellmatch!" << endl;
         cout << "This program shows every English word that can be made with Chemspell" << endl;
@@ -1016,14 +1039,24 @@ void PeriodicTable::client() {
                 cout << endl;
             }
             cout << "Type 'C' to do another entry" << endl;
+            cout << "Type 'S' to see where elements occur" << endl;
             cout << "Type 'Q' to leave" << endl;
             cout << endl;
             std::getline (std::cin,decision);
-            if (toLowerCase(decision) != "c" && toLowerCase(decision) != "q") {
-                while (toLowerCase(decision) != "c" && toLowerCase(decision) != "q") {
+            if (toLowerCase(decision) != "c" && toLowerCase(decision) != "q" && toLowerCase(decision) != "s") {
+                while (toLowerCase(decision) != "c" && toLowerCase(decision) != "q" && toLowerCase(decision) != "s") {
                     cout << "Invalid command" << endl;
                     std::getline (std::cin,decision);
                 }
+            }
+            if (toLowerCase(decision) == "s") {
+                cout << endl;
+                cout << "Enter the element whose occurances you wish to see: ";
+                string elem;
+                std::getline (std::cin,elem);
+                cout << endl;
+                wordsContainingElem(elem);
+
             }
         }
 
@@ -1040,32 +1073,4 @@ void PeriodicTable::client() {
     cout << endl;
     }
 
-}
-
-
-//PROVIDED_TEST("symbolSpeller() test") {
-//    string word = "chaser";
-//    PeriodicTable ptable;
-//    string longest = ptable.symbolSpeller(word);
-//    cout << "TEST CASE: " << longest << endl;
-//}
-
-//PROVIDED_TEST("count english words") {
-//    string file = "src/res/EnglishWords.txt";
-//    Set<string> a = size(file, 14);
-//    cout << "SIZE: " << a << endl;
-//}
-
-//PROVIDED_TEST("perfectsGivenWords() test") {
-//    Set<string> a = perfectsGivenWords(14);
-//    cout << a << endl;
-//    cout << "SIZE: " << a.size() << endl;
-//}
-
-//PROVIDED_TEST("printPerfects() test") {
-//    cout << printPerfects(5) << endl;
-//}
-
-PROVIDED_TEST("freqOfElements() test") {
-    cout << freqOfElemements() << endl;
 }
